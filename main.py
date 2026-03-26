@@ -94,7 +94,10 @@ def main():
         return
 
     # Initialize Tracker
-    tracker = Tracker('models/best.pt')
+    import os
+    model_path = 'models/best.pt' if os.path.exists('models/best.pt') else 'yolov8n.pt'
+    print(f"Using model: {model_path}")
+    tracker = Tracker(model_path)
 
     # Get object tracks
     tracks = tracker.get_object_tracks(video_frames, read_from_stub=True, stub_path=stub_path)
@@ -130,31 +133,35 @@ def main():
 
     # Assign Player Teams
     team_assigner = TeamAssigner()
-    team_assigner.assign_team_color(video_frames[0],
-                                     tracks["players"][0])
-    
-    for frame_num, player_track in enumerate(tracks["players"]):
-        for player_id, track in player_track.items():
-            team = team_assigner.get_player_team(video_frames[frame_num],
-                                                 track["bbox"],
-                                                 player_id)
-            tracks["players"][frame_num][player_id]["team"] = team
-            tracks["players"][frame_num][player_id]["team_color"] = team_assigner.team_colors[team]
+    if tracks["players"] and tracks["players"][0]:
+        team_assigner.assign_team_color(video_frames[0],
+                                         tracks["players"][0])
+        
+        for frame_num, player_track in enumerate(tracks["players"]):
+            for player_id, track in player_track.items():
+                team = team_assigner.get_player_team(video_frames[frame_num],
+                                                     track["bbox"],
+                                                     player_id)
+                tracks["players"][frame_num][player_id]["team"] = team
+                tracks["players"][frame_num][player_id]["team_color"] = team_assigner.team_colors[team]
 
     # Assign Ball Aquisition
     player_assigner =PlayerBallAssigner()
     team_ball_control = []
    
     for frame_num, player_track in enumerate(tracks['players']):
+        if 1 not in tracks['ball'][frame_num]:
+            team_ball_control.append(team_ball_control[-1] if team_ball_control else 1)
+            continue
         ball_bbox = tracks['ball'][frame_num][1]['bbox']
         assigned_player = player_assigner.assign_ball_to_player(player_track, ball_bbox)
 
         if assigned_player != -1:
             tracks['players'][frame_num][assigned_player]['has_ball'] = True
-            team_ball_control.append(tracks['players'][frame_num][assigned_player]['team'])
+            team_ball_control.append(tracks['players'][frame_num][assigned_player]['team'] if 'team' in tracks['players'][frame_num][assigned_player] else 1)
 
         else:
-            team_ball_control.append(team_ball_control[-1])
+            team_ball_control.append(team_ball_control[-1] if team_ball_control else 1)
     team_ball_control = np.array(team_ball_control)       
 
 
