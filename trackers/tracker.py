@@ -7,13 +7,16 @@ import cv2
 import sys
 import pandas as pd
 import numpy as np
+import torch
 sys.path.append('../')
 from utils import get_center_of_bbox, get_bbox_width, get_foot_position
 
 class Tracker:
-    def __init__(self, model_path):
+    def __init__(self, model_path, device=None):
+        self.device = device if device is not None else (0 if torch.cuda.is_available() else "cpu")
         self.model = YOLO(model_path) 
         self.tracker = sv.ByteTrack()
+        print(f"🎯 Detection device: {self.device}")
 
 
     def add_position_to_tracks(self,tracks):
@@ -48,7 +51,11 @@ class Tracker:
         batch_size = 20 
         detections = [] 
         for i in range(0, len(frames), batch_size):
-            detections_batch = self.model.predict(frames[i:i+batch_size], conf=0.1)
+            detections_batch = self.model.predict(
+                frames[i:i+batch_size],
+                conf=0.1,
+                device=self.device,
+            )
             detections += detections_batch
         return detections
 
@@ -73,10 +80,26 @@ class Tracker:
             # Convert to supervision Detection format
             detection_supervision = sv.Detections.from_ultralytics(detection)
 
+            # Handle both custom model (player/goalkeeper/referee/ball) and pretrained (person/sports ball)
+            # Map 'person' to 'player' for pretrained models
+            player_class_id = None
+            if 'player' in cls_names_inv:
+                player_class_id = cls_names_inv['player']
+            elif 'person' in cls_names_inv:
+                player_class_id = cls_names_inv['person']
+
+            ball_class_id = None
+            if 'ball' in cls_names_inv:
+                ball_class_id = cls_names_inv['ball']
+            elif 'sports ball' in cls_names_inv:
+                ball_class_id = cls_names_inv['sports ball']
+
+            referee_class_id = cls_names_inv.get('referee', None)
+
             # Convert GoalKeeper to player object
             for object_ind, class_id in enumerate(detection_supervision.class_id):
-                if cls_names[class_id] == "goalkeeper":
-                    detection_supervision.class_id[object_ind] = cls_names_inv["player"]
+                if cls_names[class_id] == "goalkeeper" and player_class_id is not None:
+                    detection_supervision.class_id[object_ind] = player_class_id
 
             # Track Objects
             detection_with_tracks = self.tracker.update_with_detections(detection_supervision)
@@ -90,17 +113,17 @@ class Tracker:
                 cls_id = frame_detection[3]
                 track_id = frame_detection[4]
 
-                if cls_id == cls_names_inv['player']:
+                if player_class_id is not None and cls_id == player_class_id:
                     tracks["players"][frame_num][track_id] = {"bbox": bbox}
-                    
-                if cls_id == cls_names_inv['referee']:
+
+                if referee_class_id is not None and cls_id == referee_class_id:
                     tracks["referees"][frame_num][track_id] = {"bbox": bbox}
-                
+
             for frame_detection in detection_supervision:
                 bbox = frame_detection[0].tolist()
                 cls_id = frame_detection[3]
 
-                if cls_id == cls_names_inv['ball']:
+                if ball_class_id is not None and cls_id == ball_class_id:
                     tracks["ball"][frame_num][1] = {"bbox": bbox}
 
         if stub_path is not None:
