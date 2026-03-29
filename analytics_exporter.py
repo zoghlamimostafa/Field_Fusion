@@ -14,9 +14,10 @@ class AnalyticsExporter:
         os.makedirs(output_dir, exist_ok=True)
 
     def _to_jsonable(self, value):
-        """Recursively convert NumPy values to native Python types."""
+        """Recursively convert NumPy values to native Python types with string keys."""
         if isinstance(value, dict):
-            return {self._to_jsonable(key): self._to_jsonable(item) for key, item in value.items()}
+            # Ensure all dict keys are strings for JSON/Gradio compatibility
+            return {str(self._to_jsonable(key)): self._to_jsonable(item) for key, item in value.items()}
         if isinstance(value, list):
             return [self._to_jsonable(item) for item in value]
         if isinstance(value, tuple):
@@ -37,16 +38,26 @@ class AnalyticsExporter:
         stats_list = []
 
         for player_id in total_distance.keys():
-            # Get player team
+            # Get player team and jersey number
             team = None
+            jersey_number = None
             for frame_tracks in tracks.get('players', []):
                 if player_id in frame_tracks:
                     team = frame_tracks[player_id].get('team')
+                    jersey_number = frame_tracks[player_id].get('jersey_number')
                     if team:
                         break
 
+            # Create player display name
+            if jersey_number:
+                player_name = f"Player #{jersey_number}"
+            else:
+                player_name = f"Player ID {player_id}"
+
             stats_list.append({
                 'player_id': player_id,
+                'jersey_number': jersey_number,
+                'player_name': player_name,
                 'team': team if team else 'Unknown',
                 'total_distance_m': round(total_distance[player_id], 2),
                 'max_speed_kmh': round(max_speed[player_id], 2),

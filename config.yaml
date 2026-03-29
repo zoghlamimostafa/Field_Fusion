@@ -1,0 +1,123 @@
+# Tunisia Football AI - Configuration File
+# This file contains all configuration parameters for the system
+
+# Video Processing
+video:
+  frame_rate: 24  # Default frame rate (fps)
+  default_input_path: "input_videos/"
+  default_output_path: "output_videos/"
+
+# Model Paths
+models:
+  yolo_model: "models/best.pt"
+  tacticai_model: "models/tacticai.pt"  # For Phase 3
+
+# Detection & Tracking
+detection:
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  max_det: 300  # Maximum detections per image
+
+tracking:
+  max_age: 30  # Maximum frames to keep lost tracks
+  min_hits: 3  # Minimum hits before track confirmed
+  iou_threshold: 0.3
+
+# Team Assignment
+team_assignment:
+  kmeans_clusters: 2
+  kmeans_init: "k-means++"
+  kmeans_n_init: 10
+
+# Player-Ball Assignment
+ball_assignment:
+  max_player_ball_distance: 70  # pixels
+
+# Speed & Distance Estimation
+speed_distance:
+  frame_window: 5  # frames to compute speed over
+  frame_rate: 24  # fps (should match video:frame_rate)
+
+# Pitch Dimensions (meters)
+pitch:
+  length: 105  # meters
+  width: 68    # meters
+
+# Camera Movement
+camera:
+  minimum_distance: 5  # minimum pixel movement to consider
+  max_corners: 100
+  quality_level: 0.3
+  min_distance: 3
+  block_size: 7
+
+# Analytics Export
+export:
+  output_dir: "outputs/"
+  reports_dir: "outputs/reports/"
+  heatmaps_dir: "outputs/heatmaps/"
+  level3_reports_dir: "outputs/level3_reports/"
+
+  # Export formats
+  formats:
+    - json
+    - csv
+    - html
+
+# Gradio Dashboard
+dashboard:
+  server_name: "0.0.0.0"
+  server_port: 7862
+  share: false
+  debug: false
+
+# Phase 1: Visualizations
+visualizations:
+  pitch_color: "#195905"  # Grass green
+  line_color: "#ffffff"   # White
+  dpi: 300
+  figsize: [12, 8]
+
+# Phase 2: Advanced Analytics (if implemented)
+phase2:
+  # Metabolic Power
+  metabolic_power:
+    enabled: false
+    model: "floodlight"
+
+  # VAEP Action Valuation
+  vaep:
+    enabled: false
+    training_matches: 20  # Number of StatsBomb matches for training
+
+  # Space Control
+  space_control:
+    enabled: false
+    k_neighbors: 5
+
+# Phase 3: TacticAI (if implemented)
+phase3:
+  tacticai:
+    enabled: false
+    corner_detection_threshold: 5.0  # meters from corner
+    gnn_hidden_dim: 64
+    gnn_num_heads: 4
+    gnn_dropout: 0.2
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_file: "pipeline.log"
+  console_output: true
+
+# Performance
+performance:
+  use_gpu: true  # Use GPU if available
+  batch_size: 32
+  num_workers: 4
+
+# Development/Debug
+debug:
+  save_intermediate_frames: false
+  verbose: true
+  profile: false

@@ -66,7 +66,7 @@ class TeamAssigner:
         team_id+=1
 
         if player_id ==91:
-            team_id == 1
+            team_id = 1
 
         self.player_team_dict[player_id] = team_id
 

@@ -1,0 +1,42 @@
+[Unit]
+Description=Football AI Analysis API Server
+After=network.target
+
+[Service]
+Type=notify
+# User and group (change to your user)
+User=your-username
+Group=your-group
+
+# Working directory (change to your installation path)
+WorkingDirectory=/path/to/football/Field_Fusion
+
+# Environment variables
+Environment="PATH=/path/to/venv/bin"
+EnvironmentFile=/path/to/football/Field_Fusion/.env
+
+# Start command
+ExecStart=/path/to/venv/bin/gunicorn \
+    --workers 4 \
+    --worker-class gevent \
+    --bind 0.0.0.0:5000 \
+    --timeout 300 \
+    --access-logfile /var/log/football-api/access.log \
+    --error-logfile /var/log/football-api/error.log \
+    --log-level info \
+    wsgi:app
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Resource limits
+LimitNOFILE=65536
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

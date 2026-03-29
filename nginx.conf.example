@@ -1,0 +1,76 @@
+# Nginx configuration for Football AI Analysis API
+# Place this in /etc/nginx/sites-available/football-api
+# Then create symlink: ln -s /etc/nginx/sites-available/football-api /etc/nginx/sites-enabled/
+
+upstream football_api {
+    server 127.0.0.1:5000;
+}
+
+server {
+    listen 80;
+    server_name your-domain.com www.your-domain.com;
+
+    # Redirect HTTP to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name your-domain.com www.your-domain.com;
+
+    # SSL Configuration (use Let's Encrypt)
+    ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    # Max upload size (match Flask config)
+    client_max_body_size 500M;
+
+    # Timeouts for long-running requests
+    proxy_connect_timeout 300s;
+    proxy_send_timeout 300s;
+    proxy_read_timeout 300s;
+    send_timeout 300s;
+
+    # Logging
+    access_log /var/log/nginx/football-api-access.log;
+    error_log /var/log/nginx/football-api-error.log;
+
+    # API endpoints
+    location /api/ {
+        proxy_pass http://football_api;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Disable buffering for streaming responses
+        proxy_buffering off;
+        proxy_request_buffering off;
+
+        # CORS (if not handled by Flask)
+        # add_header 'Access-Control-Allow-Origin' '*' always;
+        # add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;
+        # add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type' always;
+    }
+
+    # Static files (if serving frontend from same server)
+    location / {
+        root /var/www/football-dashboard;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Health check endpoint (no auth required)
+    location /api/health {
+        proxy_pass http://football_api;
+        access_log off;
+    }
+}

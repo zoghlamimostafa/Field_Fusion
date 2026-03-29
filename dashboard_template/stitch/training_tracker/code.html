@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tactical Blueprint - Training Session Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#6dfe9c",
+              "outline": "#767575",
+              "on-tertiary": "#573500",
+              "error": "#ff716c",
+              "tertiary": "#ffb148",
+              "secondary-fixed": "#c4d0ff",
+              "error-dim": "#d7383b",
+              "surface-bright": "#2c2c2c",
+              "primary-container": "#19be64",
+              "tertiary-dim": "#e79400",
+              "on-error": "#490006",
+              "on-tertiary-fixed": "#2a1700",
+              "secondary-fixed-dim": "#b0c2ff",
+              "surface-variant": "#262626",
+              "inverse-surface": "#fcf9f8",
+              "on-tertiary-fixed-variant": "#563400",
+              "on-secondary-fixed": "#002d80",
+              "on-primary-fixed": "#004a22",
+              "on-error-container": "#ffa8a3",
+              "tertiary-fixed-dim": "#e79400",
+              "inverse-on-surface": "#565555",
+              "surface": "#0e0e0e",
+              "surface-tint": "#6dfe9c",
+              "surface-container-low": "#131313",
+              "on-surface-variant": "#adaaaa",
+              "surface-dim": "#0e0e0e",
+              "background": "#0e0e0e",
+              "surface-container-highest": "#262626",
+              "on-primary-fixed-variant": "#006a34",
+              "tertiary-fixed": "#f8a010",
+              "tertiary-container": "#f8a010",
+              "secondary-dim": "#316bf3",
+              "inverse-primary": "#006e36",
+              "surface-container-high": "#20201f",
+              "outline-variant": "#484847",
+              "surface-container": "#1a1a1a",
+              "on-secondary-fixed-variant": "#0047bd",
+              "on-background": "#ffffff",
+              "on-primary-container": "#002f13",
+              "secondary-container": "#0053db",
+              "secondary": "#7799ff",
+              "on-tertiary-container": "#4a2c00",
+              "primary": "#6dfe9c",
+              "on-surface": "#ffffff",
+              "surface-container-lowest": "#000000",
+              "on-secondary-container": "#f8f7ff",
+              "on-primary": "#005f2e",
+              "error-container": "#9f0519",
+              "on-secondary": "#001b55",
+              "primary-dim": "#5def8f",
+              "primary-fixed-dim": "#5def8f"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0e0e0e;
+            color: #ffffff;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+        .glass-card {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(72, 72, 71, 0.1);
+            border-left: 1px solid rgba(72, 72, 71, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#131313] shadow-2xl shadow-black/50 z-50 flex flex-col py-6">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-extrabold text-[#4ADE80]">Elite United FC</h1>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">Pro League - Season 24/25</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] transition-all hover:text-white" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-manrope font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] transition-all hover:text-white" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-manrope font-medium text-sm">Squad</span>
+</a>
+<a class="flex items-center gap-3 bg-gradient-to-r from-[#6dfe9c]/10 to-transparent text-[#4ADE80] border-r-4 border-[#4ADE80] px-4 py-3 translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<span class="font-manrope font-medium text-sm">Training</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] transition-all hover:text-white" href="#">
+<span class="material-symbols-outlined">sports_soccer</span>
+<span class="font-manrope font-medium text-sm">Matches</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] transition-all hover:text-white" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-manrope font-medium text-sm">AI Insights</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] transition-all hover:text-white" href="#">
+<span class="material-symbols-outlined">videocam</span>
+<span class="font-manrope font-medium text-sm">Video Analysis</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] transition-all hover:text-white" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-manrope font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-4">
+<button class="w-full py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg text-sm flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                Deep Dive Analysis
+            </button>
+<div class="pt-4 space-y-1">
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-2 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-manrope font-medium text-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-2 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-manrope font-medium text-sm">Log Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 w-full z-40 flex justify-between items-center px-6 h-16 bg-[#0e0e0e] pl-[280px]">
+<div class="flex items-center gap-8">
+<span class="text-[#4ADE80] font-headline font-bold text-lg tracking-tight">Tactical Blueprint</span>
+<div class="flex gap-6">
+<button class="text-[#4ADE80] border-b-2 border-[#4ADE80] pb-1 font-headline font-bold text-sm">Date Range</button>
+<button class="text-[#adaaaa] hover:text-[#4ADE80] transition-colors font-headline font-bold text-sm">Team Selection</button>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined text-[#adaaaa] absolute left-3 top-1/2 -translate-y-1/2 text-sm">search</span>
+<input class="bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-2 text-sm w-64 focus:ring-2 focus:ring-primary/30 text-on-surface" placeholder="Search sessions..." type="text"/>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#262626] transition-all text-[#adaaaa] hover:text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Coach Profile Avatar" class="w-full h-full object-cover" data-alt="close-up portrait of a professional soccer coach in his 40s with a focused expression and athletic wear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACzLuZH86tY3lBdKAaMMGBTmq5W-FW6KxDURMazYWn1yFMeIX2yXibcGnG5VH935XS68ge1XcWBesjAxKn4mYVZgR_V-pAf5317YpXnRZshLnTa0Dz3hyD_8YAZf1ADPtmfFmMbgZpMdKhgcg-U0RbxRojBcTx81HeB3HcpQBy4tRCkDVNU1ptQcqBD28JSpbHSEJDXfwwgBXVsWORFSRDHv1eXJ6zVLZWK6NcHd5N5DLqUiYGlL0cR5T7NAXLTGnQw33E-K3LAviI"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+<!-- Header Metrics -->
+<div class="flex items-end justify-between mb-10">
+<div>
+<h2 class="text-4xl font-headline font-black text-on-surface tracking-tighter uppercase">Training Session Tracker</h2>
+<p class="text-on-surface-variant font-body mt-1">Session #402: High-Intensity Tactical Integration</p>
+</div>
+<div class="flex gap-4">
+<div class="text-right">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Session Load</p>
+<p class="text-2xl font-headline font-extrabold text-primary">782 <span class="text-sm font-medium opacity-60">AU</span></p>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant/30 self-center"></div>
+<div class="text-right">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Injury Risk</p>
+<p class="text-2xl font-headline font-extrabold text-tertiary">LOW <span class="text-sm font-medium opacity-60">12%</span></p>
+</div>
+</div>
+</div>
+<div class="bento-grid">
+<!-- Training Schedule Calendar (6 Cols) -->
+<div class="col-span-12 xl:col-span-7 bg-surface-container rounded-xl p-6 relative overflow-hidden">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-lg">Weekly Schedule</h3>
+<div class="flex bg-surface-container-lowest rounded-lg p-1">
+<button class="px-4 py-1 text-xs font-bold rounded bg-surface-container-highest text-on-surface">Weekly</button>
+<button class="px-4 py-1 text-xs font-bold text-on-surface-variant hover:text-on-surface">Monthly</button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<!-- Mon -->
+<div class="space-y-3">
+<p class="text-center text-[10px] font-bold text-on-surface-variant uppercase">Mon 12</p>
+<div class="h-32 bg-surface-container-lowest rounded-lg p-2 border-l-4 border-primary">
+<p class="text-[10px] font-bold text-primary mb-1">Tactical</p>
+<p class="text-[11px] leading-tight font-medium">Positional Play &amp; Rondo</p>
+<p class="text-[10px] text-on-surface-variant mt-2 italic">09:00 AM</p>
+</div>
+</div>
+<!-- Tue -->
+<div class="space-y-3">
+<p class="text-center text-[10px] font-bold text-on-surface-variant uppercase">Tue 13</p>
+<div class="h-32 bg-surface-container-lowest rounded-lg p-2 border-l-4 border-secondary">
+<p class="text-[10px] font-bold text-secondary mb-1">Physical</p>
+<p class="text-[11px] leading-tight font-medium">Strength &amp; Power</p>
+<p class="text-[10px] text-on-surface-variant mt-2 italic">10:30 AM</p>
+</div>
+</div>
+<!-- Wed (Active) -->
+<div class="space-y-3">
+<p class="text-center text-[10px] font-bold text-primary uppercase">Wed 14</p>
+<div class="h-32 bg-surface-container-highest rounded-lg p-2 border-l-4 border-primary shadow-lg shadow-primary/5 ring-1 ring-primary/20">
+<p class="text-[10px] font-bold text-primary mb-1">Technical</p>
+<p class="text-[11px] leading-tight font-medium font-bold">Finishing Drills</p>
+<p class="text-[10px] text-primary/70 mt-2 italic font-bold">LIVE NOW</p>
+</div>
+</div>
+<!-- Thu -->
+<div class="space-y-3">
+<p class="text-center text-[10px] font-bold text-on-surface-variant uppercase">Thu 15</p>
+<div class="h-32 bg-surface-container-lowest rounded-lg p-2 border-l-4 border-tertiary opacity-50">
+<p class="text-[10px] font-bold text-tertiary mb-1">Recovery</p>
+<p class="text-[11px] leading-tight font-medium">Yoga &amp; Massage</p>
+</div>
+</div>
+<!-- Fri -->
+<div class="space-y-3">
+<p class="text-center text-[10px] font-bold text-on-surface-variant uppercase">Fri 16</p>
+<div class="h-32 bg-surface-container-lowest rounded-lg p-2 border-l-4 border-primary opacity-50">
+<p class="text-[10px] font-bold text-primary mb-1">Tactical</p>
+<p class="text-[11px] leading-tight font-medium">Match Prep</p>
+</div>
+</div>
+<!-- Sat -->
+<div class="space-y-3">
+<p class="text-center text-[10px] font-bold text-on-surface-variant uppercase">Sat 17</p>
+<div class="h-32 bg-surface-container-lowest rounded-lg p-2 border-l-4 border-error opacity-50">
+<p class="text-[10px] font-bold text-error mb-1">Match Day</p>
+<p class="text-[11px] leading-tight font-medium font-bold uppercase">v. Rival FC</p>
+</div>
+</div>
+<!-- Sun -->
+<div class="space-y-3">
+<p class="text-center text-[10px] font-bold text-on-surface-variant uppercase">Sun 18</p>
+<div class="h-32 bg-surface-container-lowest rounded-lg flex items-center justify-center opacity-30 border-2 border-dashed border-outline-variant">
+<span class="material-symbols-outlined text-lg">event_busy</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Drill Completion Rates (5 Cols) -->
+<div class="col-span-12 xl:col-span-5 bg-surface-container rounded-xl p-6">
+<h3 class="font-headline font-bold text-lg mb-6">Session Drill Completion</h3>
+<div class="flex justify-around items-center h-48">
+<!-- Technical Circle -->
+<div class="text-center group">
+<div class="relative w-24 h-24 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary transition-all duration-1000" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="30" stroke-width="8"></circle>
+</svg>
+<span class="absolute text-xl font-headline font-black">88%</span>
+</div>
+<p class="mt-3 text-xs font-bold tracking-widest text-on-surface-variant group-hover:text-primary transition-colors uppercase">Technical</p>
+</div>
+<!-- Tactical Circle -->
+<div class="text-center group">
+<div class="relative w-24 h-24 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary transition-all duration-1000" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="80" stroke-width="8"></circle>
+</svg>
+<span class="absolute text-xl font-headline font-black">68%</span>
+</div>
+<p class="mt-3 text-xs font-bold tracking-widest text-on-surface-variant group-hover:text-secondary transition-colors uppercase">Tactical</p>
+</div>
+<!-- Physical Circle -->
+<div class="text-center group">
+<div class="relative w-24 h-24 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-tertiary transition-all duration-1000" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="10" stroke-width="8"></circle>
+</svg>
+<span class="absolute text-xl font-headline font-black">96%</span>
+</div>
+<p class="mt-3 text-xs font-bold tracking-widest text-on-surface-variant group-hover:text-tertiary transition-colors uppercase">Physical</p>
+</div>
+</div>
+</div>
+<!-- Attendance Tracker (4 Cols) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-6 flex flex-col h-[500px]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-lg">Real-time Check-in</h3>
+<span class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded">22 / 25 PRESENT</span>
+</div>
+<div class="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+<!-- Player Item -->
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img alt="Player Avatar" class="w-full h-full object-cover" data-alt="professional athlete athlete portrait outdoors with intense gaze" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDX0qNxeCr7G2J7x6P4FQMQexWWD-XDXQsR5f6L3b16isL90ItCf_oZa6fQ495Bbr-DlBEupMe0bfpFySsK6eiYm_K8zbNhOHdetZ6MrmJJ9XcIEhlyXn2rfcW-A-UrRABJWDIUP8nRysBmRwewc572zqPJNNA762yr2T_BzH_lci-dwnB4R_OLDbdnN9R9nShW0mNw-MpaZfH_XEq3EsZPB2JKrbU-h58u3oqdoYQN7jMjMqKxse4MC5nP1i3vULtJUx72qHAkVC96"/>
+</div>
+<div>
+<p class="text-sm font-bold">Marcus Rashford</p>
+<p class="text-[10px] text-on-surface-variant">Arrived: 08:45 AM</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+</div>
+<!-- Player Item -->
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img alt="Player Avatar" class="w-full h-full object-cover" data-alt="close-up of a smiling male soccer player in team jersey" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz9gy3OKlLzG2DljY32Kn_3jUF7rcq3Gv1D2OTtiwhYBx287COKE49Wnbb-8gi5-kUfJ9g2srnlVcH-FYbph3viEnUk6KXdpiURLv01Sb5qK0V9VkPDfO2FIfRsbi5Vy4Yn4C9jnbPO3kvNEsC2bbor42KNxD-uD-o9D24KOEmQRx7KYK9UaPG0hHrwwf6Zrl5skP4ZBtzZPlAlP9qHJVlMxHuUCsehebvuZm85MpAuRAU5PsVVEE8ziNoySD0E7zD6_Qe8x4ZkEwR"/>
+</div>
+<div>
+<p class="text-sm font-bold">Bruno Fernandes</p>
+<p class="text-[10px] text-on-surface-variant">Arrived: 08:52 AM</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+</div>
+<!-- Player Item (Late) -->
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg ring-1 ring-error/20">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-error overflow-hidden">
+<img alt="Player Avatar" class="w-full h-full object-cover" data-alt="young athletic man looking away from camera with a serious expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKlzRyzI9Korrf6oyxhCSK3UJVwdFqfeas2l2iBvtjkHNraCyRHmnBaP4HyBrLhVl0QlsmcsvjwUM-Lm7tfp2ldcr2afUKtXumI_uwKMlfeFjY3vwRaBDd5gl-FlVjsh9VjLkq8H2WgvVsiQXUvujKsYtkgGRcLsPAOIBzjl6g12YfBcfPOTL05fxg8ro5EqTrdd1TI7l-kPI0axXvTwzRcmyW2Iu9lsLriB_s0lGcOflBXfiBRejzuzq9LKC7--_GtBDVYBQw23Fe"/>
+</div>
+<div>
+<p class="text-sm font-bold">Alejandro Garnacho</p>
+<p class="text-[10px] text-error">Late: 12 mins</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error text-sm">warning</span>
+</div>
+<!-- Player Item (Absent) -->
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg opacity-40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-outline overflow-hidden grayscale">
+<img alt="Player Avatar" class="w-full h-full object-cover" data-alt="man with short hair looking directly at camera with neutral expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByyqiBIpT-ln7RDDJO706ASv0cVrarW30OJRm4QpYC2KbP3YKLDIP5IUHOlojCr3z5K5pumyAOqnkkAR00uj2ER6N_9vk1BPoX2jPkD_rBpxOwlikQ0QjfmMFI0Gdl8MqdvtNa5xF_I8nep27SIXPeYVxeGoGjq6osej9fnQ4qwL0kyjf8-oyfmxLzc2oOPuJGZYRCBHdApTd_yD8wh2I6SMqy9F3aahX89D85-2DdeAILHTV1kzBQBHxeLaVyS2gbNPmas1UQD47t"/>
+</div>
+<div>
+<p class="text-sm font-bold">Luke Shaw</p>
+<p class="text-[10px] text-on-surface-variant">INJURED (Medical Wing)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">schedule</span>
+</div>
+</div>
+</div>
+<!-- Player Fitness Scores (4 Cols) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-6 h-[500px] flex flex-col">
+<h3 class="font-headline font-bold text-lg mb-6">Player Fatigue Levels</h3>
+<div class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+<!-- Score Item -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-bold">
+<span>Lisandro Martinez</span>
+<span class="text-error">HIGH (82%)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 82%"></div>
+</div>
+</div>
+<!-- Score Item -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-bold">
+<span>Kobbie Mainoo</span>
+<span class="text-tertiary">MED (54%)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 54%"></div>
+</div>
+</div>
+<!-- Score Item -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-bold">
+<span>Rasmus Højlund</span>
+<span class="text-primary">LOW (18%)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 18%"></div>
+</div>
+</div>
+<!-- Score Item -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-bold">
+<span>Diogo Dalot</span>
+<span class="text-primary">LOW (22%)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 22%"></div>
+</div>
+</div>
+<!-- Score Item -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-bold">
+<span>Andre Onana</span>
+<span class="text-primary">LOW (12%)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 12%"></div>
+</div>
+</div>
+<!-- Score Item -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-bold">
+<span>Casemiro</span>
+<span class="text-error">HIGH (79%)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 79%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Training Intensity Metrics Chart (4 Cols) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-6 relative overflow-hidden h-[500px]">
+<h3 class="font-headline font-bold text-lg mb-2">Training Load vs Risk</h3>
+<p class="text-xs text-on-surface-variant mb-6">Visualizing chronic vs acute load ratio over 14 days.</p>
+<div class="relative h-64 w-full mt-4">
+<!-- Simulated Chart using SVG -->
+<svg class="w-full h-full" viewbox="0 0 400 200">
+<!-- Grid Lines -->
+<line stroke="#484847" stroke-dasharray="4" stroke-opacity="0.2" x1="0" x2="400" y1="0" y2="0"></line>
+<line stroke="#484847" stroke-dasharray="4" stroke-opacity="0.2" x1="0" x2="400" y1="50" y2="50"></line>
+<line stroke="#484847" stroke-dasharray="4" stroke-opacity="0.2" x1="0" x2="400" y1="100" y2="100"></line>
+<line stroke="#484847" stroke-dasharray="4" stroke-opacity="0.2" x1="0" x2="400" y1="150" y2="150"></line>
+<line stroke="#484847" stroke-dasharray="4" stroke-opacity="0.2" x1="0" x2="400" y1="200" y2="200"></line>
+<!-- Load Line (Primary) -->
+<path d="M0,180 L40,160 L80,175 L120,130 L160,110 L200,140 L240,120 L280,90 L320,105 L360,60 L400,70" fill="none" stroke="#6dfe9c" stroke-width="3"></path>
+<path d="M0,180 L40,160 L80,175 L120,130 L160,110 L200,140 L240,120 L280,90 L320,105 L360,60 L400,70 V200 H0 Z" fill="url(#gradient-load)" opacity="0.1"></path>
+<!-- Risk Line (Error) -->
+<path d="M0,190 L40,185 L80,190 L120,170 L160,180 L200,175 L240,160 L280,140 L320,150 L360,130 L400,145" fill="none" stroke="#ff716c" stroke-dasharray="4" stroke-width="2"></path>
+<defs>
+<lineargradient id="gradient-load" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#6dfe9c;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#6dfe9c;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<div class="mt-8 space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-xs font-medium">Acute Training Load (Weekly Trend)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full border-2 border-error bg-transparent"></div>
+<span class="text-xs font-medium">Projected Injury Threshold</span>
+</div>
+</div>
+<!-- Floating Badge -->
+<div class="absolute bottom-6 right-6 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+<span class="text-[10px] font-bold text-primary uppercase">Safe Training Zone</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button for Training Log -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-110 active:scale-90 transition-all z-50">
+<span class="material-symbols-outlined font-bold text-3xl">add</span>
+</button>
+</body></html>

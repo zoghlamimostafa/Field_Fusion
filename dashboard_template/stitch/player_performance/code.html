@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed": "#6dfe9c",
+            "outline": "#767575",
+            "on-tertiary": "#573500",
+            "error": "#ff716c",
+            "tertiary": "#ffb148",
+            "secondary-fixed": "#c4d0ff",
+            "error-dim": "#d7383b",
+            "surface-bright": "#2c2c2c",
+            "primary-container": "#19be64",
+            "tertiary-dim": "#e79400",
+            "on-error": "#490006",
+            "on-tertiary-fixed": "#2a1700",
+            "secondary-fixed-dim": "#b0c2ff",
+            "surface-variant": "#262626",
+            "inverse-surface": "#fcf9f8",
+            "on-tertiary-fixed-variant": "#563400",
+            "on-secondary-fixed": "#002d80",
+            "on-primary-fixed": "#004a22",
+            "on-error-container": "#ffa8a3",
+            "tertiary-fixed-dim": "#e79400",
+            "inverse-on-surface": "#565555",
+            "surface": "#0e0e0e",
+            "surface-tint": "#6dfe9c",
+            "surface-container-low": "#131313",
+            "on-surface-variant": "#adaaaa",
+            "surface-dim": "#0e0e0e",
+            "background": "#0e0e0e",
+            "surface-container-highest": "#262626",
+            "on-primary-fixed-variant": "#006a34",
+            "tertiary-fixed": "#f8a010",
+            "tertiary-container": "#f8a010",
+            "secondary-dim": "#316bf3",
+            "inverse-primary": "#006e36",
+            "surface-container-high": "#20201f",
+            "outline-variant": "#484847",
+            "surface-container": "#1a1a1a",
+            "on-secondary-fixed-variant": "#0047bd",
+            "on-background": "#ffffff",
+            "on-primary-container": "#002f13",
+            "secondary-container": "#0053db",
+            "secondary": "#7799ff",
+            "on-tertiary-container": "#4a2c00",
+            "primary": "#6dfe9c",
+            "on-surface": "#ffffff",
+            "surface-container-lowest": "#000000",
+            "on-secondary-container": "#f8f7ff",
+            "on-primary": "#005f2e",
+            "error-container": "#9f0519",
+            "on-secondary": "#001b55",
+            "primary-dim": "#5def8f",
+            "primary-fixed-dim": "#5def8f"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-headline { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .glass-card { background: rgba(38, 38, 38, 0.6); backdrop-filter: blur(20px); }
+    .radar-grid { background-image: radial-gradient(circle, #484847 1px, transparent 1px); background-size: 20px 20px; }
+  </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Side Navigation Bar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#131313] z-50 flex flex-col py-6 shadow-2xl shadow-black/50">
+<div class="px-6 mb-10">
+<div class="text-xl font-extrabold text-[#4ADE80] mb-1">Elite United FC</div>
+<div class="text-xs text-on-surface-variant font-medium">Pro League - Season 24/25</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-manrope font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-gradient-to-r from-[#6dfe9c]/10 to-transparent text-[#4ADE80] border-r-4 border-[#4ADE80] px-4 py-3 translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-manrope font-medium text-sm">Squad</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+<span class="font-manrope font-medium text-sm">Training</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="sports_soccer">sports_soccer</span>
+<span class="font-manrope font-medium text-sm">Matches</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="font-manrope font-medium text-sm">AI Insights</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="videocam">videocam</span>
+<span class="font-manrope font-medium text-sm">Video Analysis</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-3 hover:bg-[#1a1a1a] hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-manrope font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-4">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-3 rounded-xl font-headline font-bold text-sm transition-transform active:scale-95">
+        Deep Dive Analysis
+      </button>
+<div class="border-t border-outline-variant/20 pt-4">
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-2 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 text-[#adaaaa] px-4 py-2 hover:text-error transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm">Log Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- Top Bar -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-[#0e0e0e] flex justify-between items-center px-8 z-40">
+<div class="flex items-center gap-8">
+<h1 class="text-2xl font-black text-[#4ADE80] tracking-tighter uppercase font-headline">Player Performance</h1>
+<div class="flex gap-6">
+<button class="text-[#4ADE80] border-b-2 border-[#4ADE80] pb-1 font-headline font-bold text-lg tracking-tight">Date Range</button>
+<button class="text-[#adaaaa] hover:text-[#4ADE80] transition-colors font-headline font-bold text-lg tracking-tight">Team Selection</button>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#adaaaa] hover:bg-[#262626] rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-[#adaaaa] hover:bg-[#262626] rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<img alt="Coach Profile Avatar" class="w-8 h-8 rounded-full border border-primary/30" data-alt="close up professional portrait of a football coach wearing a black tracksuit with team emblem, cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4Z53Q-AWMiE5MAGhKyq5p3__QxlbGyTvq8xxLNRq1oPtWc7Rr7pF9iFFk3fh_2y_rF5GfOEPswGHfNoVGWv7MEL4lFCKrfUrNcMDzQ3f8PAq3YOCIAUGbD8jNK-92MnLTKuKdZ8CP4YWiE1wEiLpTCkcjePA7mLMQo34QbO1Ua296X6jUHZoE4v3jfI6mXNTuDKvj--LGQw1hR1cDP-zuYOBN_rOy2Z64Clx8x5QzT2Mwjjqhe8H0I7sG7VTW_nSqV_QpBEH-3jyy"/>
+</div>
+</header>
+<div class="pt-24 px-8 pb-12 space-y-10">
+<!-- Player Selection Cards (Bento Style) -->
+<section class="grid grid-cols-3 gap-6">
+<!-- Youssef Msakni -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group cursor-pointer border-l-4 border-primary">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="font-headline text-xl font-bold text-on-surface">Youssef Msakni</h2>
+<p class="text-on-surface-variant text-sm font-label uppercase tracking-widest">Left Winger | #7</p>
+</div>
+<div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-xs font-bold">MATCH READY</div>
+</div>
+<div class="flex items-end gap-4">
+<div class="flex-1 space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-xs uppercase">Fitness Level</span>
+<span class="text-primary font-headline font-extrabold">94%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 94%;"></div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-2 text-center">
+<div><div class="text-lg font-headline font-bold">12</div><div class="text-[10px] text-on-surface-variant uppercase">Goals</div></div>
+<div><div class="text-lg font-headline font-bold">08</div><div class="text-[10px] text-on-surface-variant uppercase">Assists</div></div>
+<div><div class="text-lg font-headline font-bold">1,420</div><div class="text-[10px] text-on-surface-variant uppercase">Mins</div></div>
+</div>
+</div>
+<div class="w-24 h-24 relative">
+<img class="w-full h-full object-cover rounded-lg filter grayscale group-hover:grayscale-0 transition-all" data-alt="professional sports headshot of an athletic soccer player with a focused expression, dark studio background, high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5LNKaGFXjvT0kLQ0UAWS2vV4CQvhdg1cjBWo-PlTbbBxsALTJ-cQZpCtaXbhylSp3biUdh6mTsj0vVbLS7N5WRMAuuQ1lwIwsxxxcz2wCUbxqLKlmp0mnEc3xJsA3hypcRFp0y3E3D9k8ArEVD_VrucYwqnfrBCsXMSF5AB1Ffi6bXgOTOdCyOxnF57CtsYkJhTC-se4DxkNpqHnWsMS5p_jFEkcr2a7RFA1yVCJVPF1-SYZe_kunBf6aed8-s-ekjjFvcAwZzMNP"/>
+</div>
+</div>
+</div>
+<!-- Wahbi Khazri -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group cursor-pointer hover:bg-surface-container-highest transition-colors">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="font-headline text-xl font-bold text-on-surface">Wahbi Khazri</h2>
+<p class="text-on-surface-variant text-sm font-label uppercase tracking-widest">Forward | #10</p>
+</div>
+<div class="bg-tertiary/10 px-3 py-1 rounded-full text-tertiary text-xs font-bold">RECOVERY</div>
+</div>
+<div class="flex items-end gap-4">
+<div class="flex-1 space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-xs uppercase">Fitness Level</span>
+<span class="text-tertiary font-headline font-extrabold">82%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary" style="width: 82%;"></div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-2 text-center">
+<div><div class="text-lg font-headline font-bold">09</div><div class="text-[10px] text-on-surface-variant uppercase">Goals</div></div>
+<div><div class="text-lg font-headline font-bold">04</div><div class="text-[10px] text-on-surface-variant uppercase">Assists</div></div>
+<div><div class="text-lg font-headline font-bold">980</div><div class="text-[10px] text-on-surface-variant uppercase">Mins</div></div>
+</div>
+</div>
+<div class="w-24 h-24 relative">
+<img class="w-full h-full object-cover rounded-lg filter grayscale" data-alt="dynamic close up portrait of an experienced soccer player, sharp gaze, moody dark green background, tactical atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQLyfD6wLrBPyEaXa1tI1GO44ocRRZtE-EPA6sDggb2WxTr2cq92hg58yTz6ZPx829mrewtgfsi_VEN5NPKKDHkyjAoXfYd-ZhQbYip6DAGBpoDfv8cvnoBarZ0CH9Zbt4SSj2ObqoHIONXL3LP7Hr8Sob6sv_sCnsWqga99Jdfo2SA_KLYMnb-iXwIRp9nsHBbeLC1bgtzldJi3TVC67Dio9r5wbzNq0_3HtuRKE1X7u05AGcZZqCg9u1915vkpMaRMkA4zAHTxxk"/>
+</div>
+</div>
+</div>
+<!-- Ellyes Skhiri -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group cursor-pointer hover:bg-surface-container-highest transition-colors">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h2 class="font-headline text-xl font-bold text-on-surface">Ellyes Skhiri</h2>
+<p class="text-on-surface-variant text-sm font-label uppercase tracking-widest">Midfielder | #17</p>
+</div>
+<div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-xs font-bold">ELITE FORM</div>
+</div>
+<div class="flex items-end gap-4">
+<div class="flex-1 space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-xs uppercase">Fitness Level</span>
+<span class="text-primary font-headline font-extrabold">98%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 98%;"></div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-2 text-center">
+<div><div class="text-lg font-headline font-bold">04</div><div class="text-[10px] text-on-surface-variant uppercase">Goals</div></div>
+<div><div class="text-lg font-headline font-bold">11</div><div class="text-[10px] text-on-surface-variant uppercase">Assists</div></div>
+<div><div class="text-lg font-headline font-bold">1,890</div><div class="text-[10px] text-on-surface-variant uppercase">Mins</div></div>
+</div>
+</div>
+<div class="w-24 h-24 relative">
+<img class="w-full h-full object-cover rounded-lg filter grayscale" data-alt="profile shot of a defensive midfielder, focused and calm, low key lighting, charcoal and emerald aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrfOxQwOkm80q8eVR-yopO4aiQ5yzq7_8IAdzD8hTNBMrWoByZNVADG16NjyuZc42lGrtohWjUszk2T5L0qyOxER3rJ26h3KdP-b9172maQpTaPn6PFauv9-MFo2Tc3tvmP1wiBic9hz4J4-mMuXS66Gybry4OSyfO7KjcO0P1_d5f3plJV-ewruolsWDoVej8ZYs5lwnFIwsepBIBOcyk4sWHRxLPjwsYuz4VBBZPbV_bn621AZpXPIGc0AvH8jhHGHX2qWfk8Dzt"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Tactical Analytics Layer -->
+<section class="grid grid-cols-12 gap-8">
+<!-- Radar & Heatmap (Large Left Module) -->
+<div class="col-span-8 space-y-8">
+<div class="bg-surface-container rounded-xl p-8 grid grid-cols-2 gap-8 relative">
+<div class="space-y-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="analytics">analytics</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Attribute Radar</h3>
+</div>
+<!-- Radar Chart Placeholder -->
+<div class="aspect-square radar-grid relative rounded-full border border-outline-variant/20 flex items-center justify-center">
+<div class="absolute inset-0 flex items-center justify-center opacity-40">
+<div class="w-3/4 h-3/4 border border-outline-variant/30 rounded-full"></div>
+<div class="absolute w-1/2 h-1/2 border border-outline-variant/30 rounded-full"></div>
+</div>
+<svg class="w-full h-full transform -rotate-90 p-10" viewbox="0 0 100 100">
+<polygon fill="rgba(109, 254, 156, 0.2)" points="50,10 85,35 80,75 50,90 20,75 15,35" stroke="#6dfe9c" stroke-width="1"></polygon>
+<circle cx="50" cy="10" fill="#6dfe9c" r="1.5"></circle>
+<circle cx="85" cy="35" fill="#6dfe9c" r="1.5"></circle>
+<circle cx="80" cy="75" fill="#6dfe9c" r="1.5"></circle>
+<circle cx="50" cy="90" fill="#6dfe9c" r="1.5"></circle>
+<circle cx="20" cy="75" fill="#6dfe9c" r="1.5"></circle>
+<circle cx="15" cy="35" fill="#6dfe9c" r="1.5"></circle>
+</svg>
+<!-- Labels -->
+<span class="absolute top-4 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant uppercase">Pace</span>
+<span class="absolute top-1/4 right-2 text-[10px] font-bold text-on-surface-variant uppercase">Shooting</span>
+<span class="absolute bottom-1/4 right-2 text-[10px] font-bold text-on-surface-variant uppercase">Passing</span>
+<span class="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant uppercase">Dribbling</span>
+<span class="absolute bottom-1/4 left-2 text-[10px] font-bold text-on-surface-variant uppercase">Defending</span>
+<span class="absolute top-1/4 left-2 text-[10px] font-bold text-on-surface-variant uppercase">Physical</span>
+</div>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Position Heatmap</h3>
+</div>
+<div class="text-[10px] bg-surface-container-highest px-2 py-1 rounded text-on-surface-variant">LAST 3 MATCHES</div>
+</div>
+<!-- Pitch Visualization -->
+<div class="aspect-[2/3] bg-surface-container-lowest rounded-lg relative overflow-hidden p-2 border border-outline-variant/10">
+<div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(0deg, #484847, #484847 1px, transparent 1px, transparent 40px);"></div>
+<div class="w-full h-full border-2 border-outline-variant/20 relative">
+<!-- Midfield line -->
+<div class="absolute top-1/2 w-full h-px bg-outline-variant/20"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 border-2 border-outline-variant/20 rounded-full"></div>
+<!-- Goal Areas -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-12 border-2 border-outline-variant/20 border-t-0"></div>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-12 border-2 border-outline-variant/20 border-b-0"></div>
+<!-- Heatmap Blobs (Gradients) -->
+<div class="absolute top-1/4 left-1/4 w-16 h-24 bg-primary/40 blur-2xl rounded-full"></div>
+<div class="absolute top-1/3 left-1/2 w-12 h-12 bg-primary/60 blur-xl rounded-full"></div>
+<div class="absolute top-10 right-1/4 w-8 h-8 bg-primary/30 blur-lg rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Trend Chart (Line Chart Visualization) -->
+<div class="bg-surface-container rounded-xl p-8 space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider">Performance Trends</h3>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-secondary rounded-full"></div>
+<span class="text-xs text-on-surface-variant">Minutes Played</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 bg-primary rounded-full"></div>
+<span class="text-xs text-on-surface-variant">Goal Contribution</span>
+</div>
+</div>
+</div>
+<div class="h-48 w-full relative pt-4">
+<svg class="w-full h-full" viewbox="0 0 1000 100">
+<!-- Grid Lines -->
+<line stroke="#484847" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="20" y2="20"></line>
+<line stroke="#484847" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#484847" stroke-dasharray="4" stroke-width="0.5" x1="0" x2="1000" y1="80" y2="80"></line>
+<!-- Minutes Line -->
+<path d="M0,80 Q100,20 200,50 T400,30 T600,60 T800,10 T1000,40" fill="none" stroke="#7799ff" stroke-linecap="round" stroke-width="3"></path>
+<!-- Contribution Line -->
+<path d="M0,90 Q100,70 200,85 T400,60 T600,80 T800,40 T1000,70" fill="none" stroke="#6dfe9c" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="flex justify-between mt-4 text-[10px] text-on-surface-variant font-medium">
+<span>SEP</span><span>OCT</span><span>NOV</span><span>DEC</span><span>JAN</span><span>FEB</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Comparison Tool (Right Side) -->
+<aside class="col-span-4 space-y-8">
+<div class="bg-surface-container rounded-xl p-8 h-full flex flex-col">
+<h3 class="font-headline font-bold text-lg uppercase tracking-wider mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary" data-icon="compare_arrows">compare_arrows</span>
+              Side-by-Side Comparison
+            </h3>
+<div class="space-y-10 flex-1">
+<!-- Selectors -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant/10">
+<div class="text-[10px] text-on-surface-variant uppercase mb-1">Player A</div>
+<div class="font-bold text-sm">Msakni</div>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant/10">
+<div class="text-[10px] text-on-surface-variant uppercase mb-1">Player B</div>
+<div class="font-bold text-sm">Khazri</div>
+</div>
+</div>
+<!-- Metrics -->
+<div class="space-y-6">
+<!-- xG Metric -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-primary">0.84</span>
+<span class="text-on-surface-variant uppercase tracking-widest text-[10px]">Exp. Goals (xG)</span>
+<span class="text-tertiary">0.71</span>
+</div>
+<div class="flex h-1.5 gap-1">
+<div class="bg-primary rounded-full" style="width: 55%;"></div>
+<div class="bg-tertiary rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+<!-- Passing Accuracy -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-primary">88%</span>
+<span class="text-on-surface-variant uppercase tracking-widest text-[10px]">Pass Accuracy</span>
+<span class="text-tertiary">74%</span>
+</div>
+<div class="flex h-1.5 gap-1">
+<div class="bg-primary rounded-full" style="width: 65%;"></div>
+<div class="bg-tertiary rounded-full" style="width: 35%;"></div>
+</div>
+</div>
+<!-- Duels Won -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-primary">12.4</span>
+<span class="text-on-surface-variant uppercase tracking-widest text-[10px]">Duels Won/90</span>
+<span class="text-tertiary">14.2</span>
+</div>
+<div class="flex h-1.5 gap-1">
+<div class="bg-primary rounded-full" style="width: 42%;"></div>
+<div class="bg-tertiary rounded-full" style="width: 58%;"></div>
+</div>
+</div>
+<!-- Top Speed -->
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-primary">34.2</span>
+<span class="text-on-surface-variant uppercase tracking-widest text-[10px]">Top Speed km/h</span>
+<span class="text-tertiary">31.8</span>
+</div>
+<div class="flex h-1.5 gap-1">
+<div class="bg-primary rounded-full" style="width: 52%;"></div>
+<div class="bg-tertiary rounded-full" style="width: 48%;"></div>
+</div>
+</div>
+</div>
+<!-- High Contrast Metric -->
+<div class="mt-auto pt-10">
+<div class="bg-surface-container-highest p-6 rounded-xl text-center space-y-2 border border-primary/20">
+<div class="text-[10px] text-on-surface-variant uppercase font-bold tracking-[0.2em]">Efficiency Index</div>
+<div class="text-5xl font-headline font-black text-primary tracking-tighter">8.4</div>
+<div class="text-xs text-on-surface-variant">+1.2 over league average</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</section>
+<!-- Glassmorphic Global Context Overlay -->
+<footer class="glass-card rounded-2xl p-6 border border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">Next Match Opponent</span>
+<span class="font-headline font-bold text-lg">AS Marsa</span>
+</div>
+<div class="h-10 w-px bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">Win Probability</span>
+<span class="font-headline font-bold text-lg text-primary">68.4%</span>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="bg-surface-container-highest px-6 py-2 rounded-lg text-sm font-bold hover:bg-surface-bright transition-all">Generate Scouting Report</button>
+<button class="bg-gradient-to-r from-secondary to-secondary-dim text-white px-6 py-2 rounded-lg text-sm font-bold shadow-lg shadow-secondary/20 active:scale-95 transition-all">Optimize Squad</button>
+</div>
+</footer>
+</div>
+</main>
+</body></html>

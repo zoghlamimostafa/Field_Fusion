@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Tunisia Football AI | Complete Coach Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6dfe9c",
+                        "primary-dim": "#5def8f",
+                        "primary-container": "#19be64",
+                        "surface": "#0e0e0e",
+                        "surface-container": "#1a1a1a",
+                        "surface-container-low": "#131313",
+                        "surface-container-highest": "#262626",
+                        "on-surface": "#ffffff",
+                        "on-surface-variant": "#adaaaa",
+                        "outline-variant": "#484847",
+                        "error": "#ff716c",
+                        "tertiary": "#ffb148",
+                        "secondary": "#7799ff",
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pitch-gradient {
+            background: linear-gradient(135deg, #1a4d2e 0%, #0e2818 100%);
+        }
+        .formation-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+            position: absolute;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body">
+    <!-- Top Navigation -->
+    <header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-surface-container-low border-b border-outline-variant/20">
+        <div class="flex items-center gap-8">
+            <span class="text-2xl font-black text-primary tracking-tighter font-headline">⚽ Tunisia Football AI</span>
+            <nav class="hidden md:flex gap-6 items-center">
+                <a class="font-bold text-lg text-on-surface-variant hover:text-primary transition-colors" href="dashboard_upload.html">Upload Video</a>
+                <a class="font-bold text-lg text-primary border-b-2 border-primary pb-1" href="#">Dashboard</a>
+                <a class="font-bold text-lg text-on-surface-variant hover:text-primary transition-colors cursor-pointer" onclick="loadData()">Refresh Data</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="bg-surface-container px-3 py-1 rounded-lg border border-outline-variant/20">
+                <span class="text-xs text-on-surface-variant">Status:</span>
+                <span class="text-sm font-bold ml-2" id="data-status">Loading...</span>
+            </div>
+            <button class="p-2 text-on-surface-variant hover:bg-surface-container transition-all rounded-lg">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low hidden md:flex flex-col py-6 pt-20 border-r border-outline-variant/20">
+        <div class="px-6 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-extrabold text-primary font-headline">Match Analysis</h2>
+                    <p class="text-[10px] uppercase tracking-widest text-on-surface-variant">Complete Integration</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 space-y-1">
+            <a class="flex items-center gap-3 bg-primary/10 text-primary border-r-4 border-primary px-4 py-3 font-medium text-sm" href="#overview">
+                <span class="material-symbols-outlined">dashboard</span> Overview
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#formations">
+                <span class="material-symbols-outlined">view_module</span> Formations
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#players">
+                <span class="material-symbols-outlined">groups</span> Players
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#passing">
+                <span class="material-symbols-outlined">hub</span> Pass Network
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#pressing">
+                <span class="material-symbols-outlined">compress</span> Pressing
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#events">
+                <span class="material-symbols-outlined">event</span> Match Events
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#fatigue">
+                <span class="material-symbols-outlined">fitness_center</span> Fatigue
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#alerts">
+                <span class="material-symbols-outlined">warning</span> AI Alerts
+            </a>
+            <a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container hover:text-white transition-all font-medium text-sm" href="#video">
+                <span class="material-symbols-outlined">videocam</span> Video
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="md:pl-64 pt-20 p-6 min-h-screen pb-20" id="overview">
+        <div class="max-w-7xl mx-auto space-y-8">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 class="text-4xl font-black font-headline tracking-tight">Complete Match Analysis</h1>
+                    <p class="text-on-surface-variant text-lg">AI-Powered Football Analytics Dashboard</p>
+                </div>
+            </div>
+
+            <!-- Key Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-surface-container rounded-xl p-5 border-l-4 border-primary">
+                    <p class="text-xs text-on-surface-variant uppercase mb-1">Team 1 Possession</p>
+                    <p class="text-3xl font-black font-headline text-primary" id="team1-possession">--</p>
+                </div>
+                <div class="bg-surface-container rounded-xl p-5 border-l-4 border-secondary">
+                    <p class="text-xs text-on-surface-variant uppercase mb-1">Team 2 Possession</p>
+                    <p class="text-3xl font-black font-headline text-secondary" id="team2-possession">--</p>
+                </div>
+                <div class="bg-surface-container rounded-xl p-5 border-l-4 border-tertiary">
+                    <p class="text-xs text-on-surface-variant uppercase mb-1">Total Events</p>
+                    <p class="text-3xl font-black font-headline text-tertiary" id="total-events">--</p>
+                </div>
+                <div class="bg-surface-container rounded-xl p-5 border-l-4 border-error">
+                    <p class="text-xs text-on-surface-variant uppercase mb-1">High Fatigue</p>
+                    <p class="text-3xl font-black font-headline text-error" id="high-fatigue">--</p>
+                </div>
+            </div>
+
+            <!-- Formations Section -->
+            <div class="bg-surface-container rounded-xl p-6" id="formations">
+                <h3 class="text-2xl font-bold font-headline mb-6">Team Formations & Tactical Setup</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Team 1 Formation -->
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-lg font-bold">Team 1</h4>
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-lg font-bold" id="formation1-name">--</span>
+                        </div>
+                        <div class="pitch-gradient rounded-lg p-6 aspect-[3/4] relative" id="formation1-pitch">
+                            <div class="text-center text-on-surface-variant mt-20">Loading formation...</div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-xs">
+                            <div class="bg-surface-container-low p-3 rounded">
+                                <p class="text-on-surface-variant">State</p>
+                                <p class="font-bold" id="formation1-state">--</p>
+                            </div>
+                            <div class="bg-surface-container-low p-3 rounded">
+                                <p class="text-on-surface-variant">Compactness</p>
+                                <p class="font-bold" id="formation1-compact">--</p>
+                            </div>
+                            <div class="bg-surface-container-low p-3 rounded">
+                                <p class="text-on-surface-variant">Width</p>
+                                <p class="font-bold" id="formation1-width">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team 2 Formation -->
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-lg font-bold">Team 2</h4>
+                            <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-lg font-bold" id="formation2-name">--</span>
+                        </div>
+                        <div class="pitch-gradient rounded-lg p-6 aspect-[3/4] relative" id="formation2-pitch">
+                            <div class="text-center text-on-surface-variant mt-20">Loading formation...</div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-xs">
+                            <div class="bg-surface-container-low p-3 rounded">
+                                <p class="text-on-surface-variant">State</p>
+                                <p class="font-bold" id="formation2-state">--</p>
+                            </div>
+                            <div class="bg-surface-container-low p-3 rounded">
+                                <p class="text-on-surface-variant">Compactness</p>
+                                <p class="font-bold" id="formation2-compact">--</p>
+                            </div>
+                            <div class="bg-surface-container-low p-3 rounded">
+                                <p class="text-on-surface-variant">Width</p>
+                                <p class="font-bold" id="formation2-width">--</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pass Network Analysis -->
+            <div class="bg-surface-container rounded-xl p-6" id="passing">
+                <h3 class="text-2xl font-bold font-headline mb-6">Pass Network Analysis</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-surface-container-low rounded-xl p-5">
+                        <h4 class="text-lg font-bold mb-4 text-primary">Team 1</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Total Passes</span>
+                                <span class="font-bold" id="pass1-total">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Completed</span>
+                                <span class="font-bold" id="pass1-completed">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Accuracy</span>
+                                <span class="font-bold text-primary" id="pass1-accuracy">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Key Passer</span>
+                                <span class="font-bold" id="pass1-key-player">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Network Density</span>
+                                <span class="font-bold" id="pass1-density">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-container-low rounded-xl p-5">
+                        <h4 class="text-lg font-bold mb-4 text-secondary">Team 2</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Total Passes</span>
+                                <span class="font-bold" id="pass2-total">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Completed</span>
+                                <span class="font-bold" id="pass2-completed">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Accuracy</span>
+                                <span class="font-bold text-secondary" id="pass2-accuracy">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Key Passer</span>
+                                <span class="font-bold" id="pass2-key-player">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Network Density</span>
+                                <span class="font-bold" id="pass2-density">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pressing Metrics -->
+            <div class="bg-surface-container rounded-xl p-6" id="pressing">
+                <h3 class="text-2xl font-bold font-headline mb-6">Pressing & Defensive Metrics</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-bold text-primary">Team 1 Defense</h4>
+                        <div class="bg-surface-container-low rounded-xl p-5 space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Pressing Intensity</span>
+                                <span class="font-bold" id="press1-intensity">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">High Press %</span>
+                                <span class="font-bold" id="press1-high">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">PPDA</span>
+                                <span class="font-bold" id="press1-ppda">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Recovery Speed</span>
+                                <span class="font-bold" id="press1-recovery">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Defensive Line</span>
+                                <span class="font-bold" id="press1-line">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-bold text-secondary">Team 2 Defense</h4>
+                        <div class="bg-surface-container-low rounded-xl p-5 space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Pressing Intensity</span>
+                                <span class="font-bold" id="press2-intensity">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">High Press %</span>
+                                <span class="font-bold" id="press2-high">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">PPDA</span>
+                                <span class="font-bold" id="press2-ppda">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Recovery Speed</span>
+                                <span class="font-bold" id="press2-recovery">--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Defensive Line</span>
+                                <span class="font-bold" id="press2-line">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Match Events Timeline -->
+            <div class="bg-surface-container rounded-xl p-6" id="events">
+                <h3 class="text-2xl font-bold font-headline mb-6">Match Events Timeline</h3>
+                <div class="space-y-4" id="events-timeline">
+                    <div class="text-center py-8 text-on-surface-variant">Loading events...</div>
+                </div>
+            </div>
+
+            <!-- Player Performance -->
+            <div class="bg-surface-container rounded-xl p-6" id="players">
+                <h3 class="text-2xl font-bold font-headline mb-6">Top Player Performance</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-outline-variant/20">
+                                <th class="text-left py-3 px-2 text-xs font-bold text-on-surface-variant uppercase">Player</th>
+                                <th class="text-left py-3 px-2 text-xs font-bold text-on-surface-variant uppercase">Team</th>
+                                <th class="text-right py-3 px-2 text-xs font-bold text-on-surface-variant uppercase">Distance</th>
+                                <th class="text-right py-3 px-2 text-xs font-bold text-on-surface-variant uppercase">Max Speed</th>
+                                <th class="text-right py-3 px-2 text-xs font-bold text-on-surface-variant uppercase">Avg Speed</th>
+                                <th class="text-right py-3 px-2 text-xs font-bold text-on-surface-variant uppercase">Fatigue</th>
+                            </tr>
+                        </thead>
+                        <tbody id="player-table-body">
+                            <tr>
+                                <td colspan="6" class="text-center py-8 text-on-surface-variant">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-surface-container rounded-xl p-6">
+                    <h3 class="text-lg font-bold font-headline mb-4">Player Distance</h3>
+                    <canvas id="distanceChart"></canvas>
+                </div>
+                <div class="bg-surface-container rounded-xl p-6">
+                    <h3 class="text-lg font-bold font-headline mb-4">Speed Analysis</h3>
+                    <canvas id="speedChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Fatigue Analysis -->
+            <div class="bg-surface-container rounded-xl p-6" id="fatigue">
+                <h3 class="text-2xl font-bold font-headline mb-6">Fatigue Analysis</h3>
+                <div id="fatigue-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center py-8 text-on-surface-variant col-span-3">Loading...</div>
+                </div>
+            </div>
+
+            <!-- AI Alerts -->
+            <div class="bg-surface-container rounded-xl p-6" id="alerts">
+                <h3 class="text-2xl font-bold font-headline mb-6">AI Alerts & Insights</h3>
+                <div id="alerts-container" class="space-y-4">
+                    <div class="text-center py-8 text-on-surface-variant">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Video Analysis -->
+            <div class="bg-surface-container rounded-xl p-6" id="video">
+                <h3 class="text-2xl font-bold font-headline mb-6">Video Analysis</h3>
+                <div class="aspect-video bg-surface-container-low rounded-lg overflow-hidden">
+                    <video id="match-video" controls class="w-full h-full">
+                        <source src="../outputs/gradio_output.mp4" type="video/mp4">
+                        <source src="outputs/gradio_output.avi" type="video/x-msvideo">
+                        Your browser does not support video.
+                    </video>
+                </div>
+                <div class="mt-4 flex gap-4 flex-wrap">
+                    <a href="outputs/MATCH_SUMMARY_REPORT.pdf" target="_blank"
+                       class="bg-primary text-surface px-6 py-3 rounded-lg font-bold hover:brightness-110 flex items-center gap-2">
+                        <span class="material-symbols-outlined">description</span>
+                        Match Summary PDF
+                    </a>
+                    <a href="outputs/FATIGUE_ANALYSIS_REPORT.pdf" target="_blank"
+                       class="bg-error text-surface px-6 py-3 rounded-lg font-bold hover:brightness-110 flex items-center gap-2">
+                        <span class="material-symbols-outlined">fitness_center</span>
+                        Fatigue Report PDF
+                    </a>
+                    <a href="outputs/TACTICAL_ANALYSIS_REPORT.pdf" target="_blank"
+                       class="bg-secondary text-surface px-6 py-3 rounded-lg font-bold hover:brightness-110 flex items-center gap-2">
+                        <span class="material-symbols-outlined">psychology</span>
+                        Tactical Report PDF
+                    </a>
+                    <a href="outputs/gradio_reports/analysis_report.html" target="_blank"
+                       class="bg-tertiary text-surface px-6 py-3 rounded-lg font-bold hover:brightness-110 flex items-center gap-2">
+                        <span class="material-symbols-outlined">language</span>
+                        HTML Report
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global data storage
+        let allData = {
+            playerStats: [],
+            teamStats: {},
+            fatigueData: {},
+            alertsData: {},
+            formationsData: {},
+            passNetworkData: {},
+            pressingData: {},
+            eventsData: {},
+            confidenceData: {}
+        };
+
+        let charts = {
+            distance: null,
+            speed: null
+        };
+
+        // Load all data sources
+        async function loadData() {
+            document.getElementById('data-status').textContent = 'Loading...';
+            document.getElementById('data-status').className = 'text-sm font-bold ml-2 text-tertiary';
+
+            try {
+                // Load all JSON files in parallel
+                const [playerStats, teamStats, fatigueData, alertsData, formationsData,
+                       passNetworkData, pressingData, eventsData] = await Promise.all([
+                    fetch('outputs/gradio_reports/player_stats.json').then(r => r.json()),
+                    fetch('outputs/gradio_reports/team_stats.json').then(r => r.json()),
+                    fetch('outputs/gradio_level3_reports/fatigue.json').then(r => r.json()).catch(() => ({})),
+                    fetch('outputs/gradio_level3_reports/alerts.json').then(r => r.json()).catch(() => ({})),
+                    fetch('outputs/gradio_level3_reports/formations.json').then(r => r.json()).catch(() => ({})),
+                    fetch('outputs/gradio_level3_reports/pass_networks.json').then(r => r.json()).catch(() => ({})),
+                    fetch('outputs/gradio_level3_reports/pressing.json').then(r => r.json()).catch(() => ({})),
+                    fetch('outputs/gradio_reports/events.json').then(r => r.json()).catch(() => ({}))
+                ]);
+
+                allData = {
+                    playerStats,
+                    teamStats,
+                    fatigueData,
+                    alertsData,
+                    formationsData,
+                    passNetworkData,
+                    pressingData,
+                    eventsData
+                };
+
+                updateAllSections();
+
+                document.getElementById('data-status').textContent = 'Live';
+                document.getElementById('data-status').className = 'text-sm font-bold ml-2 text-primary';
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('data-status').textContent = 'Error';
+                document.getElementById('data-status').className = 'text-sm font-bold ml-2 text-error';
+            }
+        }
+
+        function updateAllSections() {
+            updateKeyStats();
+            updateFormations();
+            updatePassNetwork();
+            updatePressing();
+            updateMatchEvents();
+            updatePlayerTable();
+            updateCharts();
+            updateFatigue();
+            updateAlerts();
+        }
+
+        function updateKeyStats() {
+            const { teamStats, eventsData, fatigueData } = allData;
+
+            if (teamStats.team_1) {
+                document.getElementById('team1-possession').textContent =
+                    teamStats.team_1.possession_percent.toFixed(1) + '%';
+            }
+
+            if (teamStats.team_2) {
+                document.getElementById('team2-possession').textContent =
+                    teamStats.team_2.possession_percent.toFixed(1) + '%';
+            }
+
+            if (eventsData.summary) {
+                const total = eventsData.summary.total_passes +
+                             eventsData.summary.total_shots +
+                             eventsData.summary.total_interceptions;
+                document.getElementById('total-events').textContent = total;
+            }
+
+            if (fatigueData.high_fatigue_count !== undefined) {
+                document.getElementById('high-fatigue').textContent = fatigueData.high_fatigue_count;
+            }
+        }
+
+        function updateFormations() {
+            const { formationsData } = allData;
+
+            if (formationsData.formations) {
+                const team1 = formationsData.formations['1'];
+                const team2 = formationsData.formations['2'];
+
+                if (team1) {
+                    document.getElementById('formation1-name').textContent = team1.formation_name;
+                    document.getElementById('formation1-state').textContent = team1.tactical_state;
+                    document.getElementById('formation1-compact').textContent = team1.shape.compactness.toFixed(2);
+                    document.getElementById('formation1-width').textContent = team1.shape.width.toFixed(0) + 'm';
+                    renderFormation('formation1-pitch', team1, 'primary');
+                }
+
+                if (team2) {
+                    document.getElementById('formation2-name').textContent = team2.formation_name;
+                    document.getElementById('formation2-state').textContent = team2.tactical_state;
+                    document.getElementById('formation2-compact').textContent = team2.shape.compactness.toFixed(2);
+                    document.getElementById('formation2-width').textContent = team2.shape.width.toFixed(0) + 'm';
+                    renderFormation('formation2-pitch', team2, 'secondary');
+                }
+            }
+        }
+
+        function renderFormation(containerId, formation, color) {
+            const container = document.getElementById(containerId);
+            const colorMap = {
+                'primary': '#6dfe9c',
+                'secondary': '#7799ff'
+            };
+
+            let html = '<div class="relative w-full h-full">';
+
+            // Simple visualization
+            html += `<div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                        <div class="text-${color} font-bold text-sm">
+                            ${formation.lines.defenders.length} Def |
+                            ${formation.lines.midfielders.length} Mid |
+                            ${formation.lines.forwards.length} Fwd
+                        </div>
+                    </div>`;
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function updatePassNetwork() {
+            const { passNetworkData } = allData;
+
+            if (passNetworkData.pass_networks) {
+                const team1 = passNetworkData.pass_networks['1'];
+                const team2 = passNetworkData.pass_networks['2'];
+
+                if (team1) {
+                    document.getElementById('pass1-total').textContent = team1.passes.total;
+                    document.getElementById('pass1-completed').textContent = team1.passes.completed;
+                    document.getElementById('pass1-accuracy').textContent = team1.passes.accuracy_percent.toFixed(1) + '%';
+                    document.getElementById('pass1-key-player').textContent = 'Player ' + team1.key_players.most_passes_player;
+                    document.getElementById('pass1-density').textContent = team1.network_structure.network_density.toFixed(2);
+                }
+
+                if (team2) {
+                    document.getElementById('pass2-total').textContent = team2.passes.total;
+                    document.getElementById('pass2-completed').textContent = team2.passes.completed;
+                    document.getElementById('pass2-accuracy').textContent = team2.passes.accuracy_percent.toFixed(1) + '%';
+                    document.getElementById('pass2-key-player').textContent = 'Player ' + team2.key_players.most_passes_player;
+                    document.getElementById('pass2-density').textContent = team2.network_structure.network_density.toFixed(2);
+                }
+            }
+        }
+
+        function updatePressing() {
+            const { pressingData } = allData;
+
+            if (pressingData.pressing_metrics) {
+                const team1 = pressingData.pressing_metrics['1'];
+                const team2 = pressingData.pressing_metrics['2'];
+
+                if (team1) {
+                    document.getElementById('press1-intensity').textContent = team1.pressing.intensity.toFixed(2);
+                    document.getElementById('press1-high').textContent = team1.pressing.high_press_percentage.toFixed(1) + '%';
+                    document.getElementById('press1-ppda').textContent = team1.defensive_actions.ppda.toFixed(2);
+                    document.getElementById('press1-recovery').textContent = team1.defensive_actions.recovery_speed_seconds.toFixed(1) + 's';
+                    document.getElementById('press1-line').textContent = team1.pressing.defensive_line_height.toFixed(0);
+                }
+
+                if (team2) {
+                    document.getElementById('press2-intensity').textContent = team2.pressing.intensity.toFixed(2);
+                    document.getElementById('press2-high').textContent = team2.pressing.high_press_percentage.toFixed(1) + '%';
+                    document.getElementById('press2-ppda').textContent = team2.defensive_actions.ppda.toFixed(2);
+                    document.getElementById('press2-recovery').textContent = team2.defensive_actions.recovery_speed_seconds.toFixed(1) + 's';
+                    document.getElementById('press2-line').textContent = team2.pressing.defensive_line_height.toFixed(0);
+                }
+            }
+        }
+
+        function updateMatchEvents() {
+            const { eventsData } = allData;
+            const container = document.getElementById('events-timeline');
+
+            if (!eventsData.passes && !eventsData.shots && !eventsData.interceptions) {
+                return;
+            }
+
+            let html = '';
+
+            // Passes
+            if (eventsData.passes) {
+                eventsData.passes.forEach(pass => {
+                    html += `
+                        <div class="bg-surface-container-low rounded-lg p-4 border-l-4 border-primary">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">arrow_forward</span>
+                                <div class="flex-1">
+                                    <p class="font-bold">Pass: Player ${pass.from_player} → Player ${pass.to_player}</p>
+                                    <p class="text-xs text-on-surface-variant">Frame ${pass.frame} | Team ${pass.team} | ${pass.distance.toFixed(1)}m</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Shots
+            if (eventsData.shots) {
+                eventsData.shots.forEach(shot => {
+                    html += `
+                        <div class="bg-surface-container-low rounded-lg p-4 border-l-4 border-tertiary">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+                                <div class="flex-1">
+                                    <p class="font-bold">Shot: Player ${shot.player}</p>
+                                    <p class="text-xs text-on-surface-variant">Frame ${shot.frame} | Team ${shot.team} | Speed: ${shot.speed.toFixed(1)} km/h</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Interceptions
+            if (eventsData.interceptions) {
+                eventsData.interceptions.slice(0, 5).forEach(int => {
+                    html += `
+                        <div class="bg-surface-container-low rounded-lg p-4 border-l-4 border-error">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-error">block</span>
+                                <div class="flex-1">
+                                    <p class="font-bold">Interception: Player ${int.to_player}</p>
+                                    <p class="text-xs text-on-surface-variant">Frame ${int.frame} | From Team ${int.from_team} to Team ${int.to_team}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html || '<div class="text-center py-8 text-on-surface-variant">No events</div>';
+        }
+
+        function updatePlayerTable() {
+            const { playerStats, fatigueData } = allData;
+            const tbody = document.getElementById('player-table-body');
+            const top = playerStats.slice(0, 10);
+
+            tbody.innerHTML = top.map(player => {
+                const fatigue = fatigueData.players && fatigueData.players[player.player_id]
+                    ? (fatigueData.players[player.player_id].scores.fatigue_score * 100).toFixed(0) + '%'
+                    : 'N/A';
+
+                return `
+                    <tr class="border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors">
+                        <td class="py-3 px-2 font-bold">${player.player_id}</td>
+                        <td class="py-3 px-2">
+                            <span class="px-2 py-1 rounded ${player.team === 1 ? 'bg-primary/20 text-primary' : 'bg-secondary/20 text-secondary'}">
+                                Team ${player.team}
+                            </span>
+                        </td>
+                        <td class="py-3 px-2 text-right">${player.total_distance_m.toFixed(1)}m</td>
+                        <td class="py-3 px-2 text-right">${player.max_speed_kmh.toFixed(1)}</td>
+                        <td class="py-3 px-2 text-right">${player.avg_speed_kmh.toFixed(1)}</td>
+                        <td class="py-3 px-2 text-right font-bold">${fatigue}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateCharts() {
+            const { playerStats } = allData;
+            const top = playerStats.slice(0, 8);
+
+            // Distance Chart
+            const dCtx = document.getElementById('distanceChart').getContext('2d');
+            if (charts.distance) charts.distance.destroy();
+
+            charts.distance = new Chart(dCtx, {
+                type: 'bar',
+                data: {
+                    labels: top.map(p => `P${p.player_id}`),
+                    datasets: [{
+                        label: 'Distance (m)',
+                        data: top.map(p => p.total_distance_m),
+                        backgroundColor: top.map(p => p.team === 1 ? '#6dfe9c80' : '#7799ff80'),
+                        borderColor: top.map(p => p.team === 1 ? '#6dfe9c' : '#7799ff'),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#262626' }, ticks: { color: '#adaaaa' } },
+                        x: { grid: { display: false }, ticks: { color: '#adaaaa' } }
+                    }
+                }
+            });
+
+            // Speed Chart
+            const sCtx = document.getElementById('speedChart').getContext('2d');
+            if (charts.speed) charts.speed.destroy();
+
+            charts.speed = new Chart(sCtx, {
+                type: 'radar',
+                data: {
+                    labels: top.map(p => `P${p.player_id}`),
+                    datasets: [{
+                        label: 'Max Speed',
+                        data: top.map(p => p.max_speed_kmh),
+                        backgroundColor: '#6dfe9c40',
+                        borderColor: '#6dfe9c',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        r: { beginAtZero: true, grid: { color: '#262626' }, ticks: { color: '#adaaaa' } }
+                    }
+                }
+            });
+        }
+
+        function updateFatigue() {
+            const { fatigueData } = allData;
+            const container = document.getElementById('fatigue-grid');
+
+            if (!fatigueData.players) return;
+
+            const players = Object.values(fatigueData.players)
+                .sort((a, b) => b.scores.fatigue_score - a.scores.fatigue_score)
+                .slice(0, 9);
+
+            container.innerHTML = players.map(p => {
+                const fatigue = (p.scores.fatigue_score * 100).toFixed(0);
+                const isHigh = p.scores.fatigue_score > 0.7;
+
+                return `
+                    <div class="bg-surface-container-low rounded-xl p-4 border-l-4 ${isHigh ? 'border-error' : 'border-primary'}">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-bold">Player ${p.player_id}</span>
+                            <span class="text-xs px-2 py-1 rounded ${p.team === 1 ? 'bg-primary/20 text-primary' : 'bg-secondary/20 text-secondary'}">
+                                T${p.team}
+                            </span>
+                        </div>
+                        <p class="text-3xl font-black ${isHigh ? 'text-error' : 'text-primary'}">${fatigue}%</p>
+                        <p class="text-xs text-on-surface-variant mt-2">
+                            ${p.distances.total.toFixed(0)}m | ${p.intensity_metrics.sprint_count} sprints
+                        </p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateAlerts() {
+            const { alertsData } = allData;
+            const container = document.getElementById('alerts-container');
+
+            if (!alertsData.alerts || alertsData.alerts.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-on-surface-variant">No alerts</div>';
+                return;
+            }
+
+            container.innerHTML = alertsData.alerts.map(alert => {
+                const colorMap = { high: 'error', medium: 'tertiary', low: 'primary' };
+                const color = colorMap[alert.severity] || 'primary';
+
+                return `
+                    <div class="bg-surface-container-low rounded-xl p-5 border-l-4 border-${color}">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-${color}" style="font-variation-settings: 'FILL' 1;">
+                                ${alert.severity === 'high' ? 'warning' : 'info'}
+                            </span>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <h4 class="font-bold">${alert.type}</h4>
+                                    <span class="text-xs px-2 py-1 rounded bg-${color}/20 text-${color} uppercase">${alert.severity}</span>
+                                </div>
+                                <p class="text-sm text-on-surface-variant mt-2">${alert.message}</p>
+                                <p class="text-xs text-on-surface-variant/60 mt-2">Player ${alert.player_id} • Team ${alert.team}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

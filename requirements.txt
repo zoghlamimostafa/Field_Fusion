@@ -1,0 +1,60 @@
+# Tunisia Football AI - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core ML/CV Libraries
+numpy>=1.24.0
+opencv-python>=4.8.0
+torch>=2.0.0
+ultralytics>=8.0.0  # YOLO
+scikit-learn>=1.3.0
+
+# Video Processing
+supervision>=0.16.0
+
+# Data Processing
+pandas>=2.0.0
+scipy>=1.11.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Web Interface
+gradio>=4.0.0
+
+# Phase 1 Dependencies (Production Ready)
+mplsoccer>=1.1.0  # Professional football visualizations
+kloppy>=3.8.0     # Multi-provider data loading (StatsBomb, SkillCorner, etc.)
+
+# Phase 2 Dependencies (Optional - install if Phase 2 implemented)
+# floodlight-sports>=0.3.0  # Metabolic power models
+# socceraction>=1.0.0       # VAEP action valuation
+# faiss-cpu>=1.7.0          # Similarity search (or faiss-gpu for GPU)
+
+# Phase 3 Dependencies (Optional - install if Phase 3 implemented)
+# torch-geometric>=2.3.0    # Graph Neural Networks
+
+# API Server Dependencies (Optional - for api_server.py)
+flask>=3.0.0
+flask-cors>=4.0.0
+python-dotenv>=1.0.0
+pyjwt>=2.8.0
+
+# PDF Export (Optional)
+reportlab>=4.0.0
+fpdf>=1.7.2
+
+# Configuration Management
+pyyaml>=6.0
+
+# Utilities
+tqdm>=4.65.0
+pillow>=10.0.0
+requests>=2.31.0
+
+# Development Dependencies (Optional)
+# pytest>=7.4.0
+# pytest-cov>=4.1.0
+# black>=23.7.0
+# flake8>=6.1.0
+# mypy>=1.5.0

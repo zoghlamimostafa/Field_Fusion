@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Complete Football Analysis Pipeline - Level 3 SaaS
+Complete Football Analysis Pipeline - Level 4 Elite SaaS
 Integrates ALL features: detection, tracking, events, heatmaps, analytics,
-formation detection, fatigue analysis, pressing metrics, pass networks, alerts, confidence scoring
+formation detection, fatigue analysis, pressing metrics, pass networks, alerts, confidence scoring,
+xG model, player valuation, injury risk prediction, opposition scouting
 
-🇹🇳 TUNISIA FOOTBALL AI - Professional Level 3 SaaS Platform
+🇹🇳 TUNISIA FOOTBALL AI - Elite Level 4 SaaS Platform
 """
 
 import numpy as np
@@ -18,7 +19,7 @@ from event_detector import EventDetector
 from analytics_exporter import AnalyticsExporter
 from player_id_consolidator import PlayerIDConsolidator
 
-# NEW: Level 3 Intelligence Modules
+# Level 3 Intelligence Modules
 from pitch_calibrator_enhanced import EnhancedPitchCalibrator
 from fatigue_estimator import FatigueEstimator
 from formation_detector import FormationDetector
@@ -28,13 +29,22 @@ from pass_network_analyzer import PassNetworkAnalyzer
 from confidence_scorer import ConfidenceScorer
 from pdf_report_exporter import PDFReportExporter
 
+# Level 4 Advanced Analytics Modules
+from xg_model import ExpectedGoalsModel
+from player_valuation import PlayerValuationModel, PlayerProfile, Position, League
+from injury_risk_model import InjuryRiskModel
+from opposition_scouting import OppositionScoutingSystem
+
+# NEW: Jersey Number Recognition
+from jersey_number_recognizer import JerseyNumberRecognizer
+
 from utils import read_video, save_video
 import os
 import json
 
 def main():
     print("=" * 80)
-    print("🇹🇳 TUNISIA FOOTBALL AI - LEVEL 3 PROFESSIONAL SAAS PLATFORM")
+    print("🇹🇳 TUNISIA FOOTBALL AI - LEVEL 4 ELITE SAAS PLATFORM")
     print("=" * 80)
 
     # Configuration
@@ -59,7 +69,7 @@ def main():
     from camera_movement_estimator import CameraMovementEstimator
     camera_movement_estimator = CameraMovementEstimator(video_frames[0])
 
-    # NEW: Level 3 Intelligence Components
+    # Level 3 Intelligence Components
     enhanced_pitch_calibrator = EnhancedPitchCalibrator()
     fatigue_estimator = FatigueEstimator(fps=video_fps)
     formation_detector = FormationDetector(fps=video_fps)
@@ -69,7 +79,16 @@ def main():
     confidence_scorer = ConfidenceScorer(fps=video_fps)
     pdf_exporter = PDFReportExporter()
 
-    print("   ✅ All components initialized (Basic + Level 3)")
+    # Level 4 Advanced Analytics Components
+    xg_model = ExpectedGoalsModel()
+    valuation_model = PlayerValuationModel()
+    injury_risk_model = InjuryRiskModel()
+    opposition_scout = OppositionScoutingSystem()
+
+    # NEW: Jersey Number Recognition
+    jersey_recognizer = JerseyNumberRecognizer(min_confidence=0.5)
+
+    print("   ✅ All components initialized (Basic + Level 3 + Level 4 + Jersey Recognition)")
 
     # Detect and track objects
     print("\n🎯 Step 3: Detecting and tracking players, ball, referees...")
@@ -95,6 +114,17 @@ def main():
     id_mapping = consolidator.consolidate_player_ids(tracks)
     tracks = consolidator.apply_consolidation(tracks, id_mapping)
     print("   ✅ Player IDs consolidated to actual players")
+
+    # NEW: Jersey Number Recognition
+    print("\n🔢 Step 5a: Jersey Number Recognition (OCR)...")
+    jersey_numbers = jersey_recognizer.detect_numbers_in_tracks(
+        video_frames, tracks, sample_every_n_frames=25
+    )
+    if jersey_numbers:
+        tracks = jersey_recognizer.assign_numbers_to_tracks(tracks, jersey_numbers)
+        jersey_recognizer.export_number_mapping('outputs/jersey_numbers.json')
+    else:
+        print("   ⚠️  No jersey numbers detected")
 
     # Add position tracking
     print("\n📍 Step 6: Adding position tracking...")
@@ -258,8 +288,78 @@ def main():
         pressing_data=pressing_data
     )
 
-    # Consolidate all Level 3 analytics
-    print("\n📦 Consolidating Level 3 Analytics...")
+    # === NEW LEVEL 4 ADVANCED ANALYTICS ===
+
+    # Step 21: Expected Goals (xG) Analysis
+    print("\n⚽ Step 21: Expected Goals (xG) Analysis...")
+    xg_shots = xg_model.extract_shots_from_analytics(analytics, tracks, homography)
+    if xg_shots:
+        xg_report = xg_model.analyze_match_xg(xg_shots)
+        xg_model.print_xg_summary(xg_report)
+    else:
+        print("   ⚠️  No shots detected for xG analysis")
+        xg_report = None
+
+    # Step 22: Player Transfer Valuation
+    print("\n💰 Step 22: Player Transfer Valuation...")
+    valuation_reports = {}
+    player_stats_list = analytics.get('player_stats', [])
+
+    # Value top 3 players from each team
+    team1_players = [p for p in player_stats_list if p.get('team') == 1]
+    team2_players = [p for p in player_stats_list if p.get('team') == 2]
+
+    top_team1 = sorted(team1_players, key=lambda x: x.get('total_distance_m', 0), reverse=True)[:3]
+    top_team2 = sorted(team2_players, key=lambda x: x.get('total_distance_m', 0), reverse=True)[:3]
+
+    for player_data in top_team1 + top_team2:
+        player_id = player_data['player_id']
+        profile = valuation_model.create_profile_from_analytics(
+            player_id, analytics, fatigue_data,
+            age=25.0, position=Position.MIDFIELDER, league=League.SECOND_TIER,
+            name=f"Player_{player_id}"
+        )
+        val_report = valuation_model.estimate_value(profile)
+        valuation_reports[player_id] = val_report
+
+    print(f"   ✅ Valued {len(valuation_reports)} key players")
+
+    # Step 23: Injury Risk Assessment
+    print("\n🏥 Step 23: Injury Risk Assessment...")
+    injury_profiles = []
+
+    for player_data in player_stats_list:
+        player_id = player_data['player_id']
+        profile = injury_risk_model.create_profile_from_fatigue_data(
+            player_id, fatigue_data, analytics,
+            name=f"Player_{player_id}", age=25.0, position="midfielder"
+        )
+        injury_profiles.append(profile)
+
+    if injury_profiles:
+        injury_report_team1 = injury_risk_model.generate_team_report(
+            [p for p in injury_profiles if p.player_id in range(1, 12)], team_id=1
+        )
+        injury_report_team2 = injury_risk_model.generate_team_report(
+            [p for p in injury_profiles if p.player_id in range(12, 23)], team_id=2
+        )
+        injury_risk_model.print_report_summary(injury_report_team1)
+        injury_risk_model.print_report_summary(injury_report_team2)
+    else:
+        print("   ⚠️  No injury risk data available")
+        injury_report_team1 = None
+        injury_report_team2 = None
+
+    # Step 24: Opposition Scouting (for Team 2)
+    print("\n🔍 Step 24: Opposition Scouting (Team 2)...")
+    opposition_report = opposition_scout.generate_opposition_report(
+        analytics, formations, pressing_data, pass_networks, fatigue_data,
+        team_id=2, team_name="Opposition Team"
+    )
+    opposition_scout.print_report_summary(opposition_report)
+
+    # Consolidate all Level 3 + Level 4 analytics
+    print("\n📦 Consolidating Level 3 + Level 4 Analytics...")
     level3_analytics = {
         'formations': formation_detector.export_formations(formations) if formations else {},
         'fatigue': fatigue_estimator.export_fatigue_data(fatigue_data) if fatigue_data else {},
@@ -268,7 +368,21 @@ def main():
         'alerts': alert_engine.export_alerts_to_dict(alerts) if alerts else {},
         'confidence': confidence_scorer.export_confidence_data(confidence_score)
     }
+
+    # Level 4 analytics
+    from dataclasses import asdict
+    level4_analytics = {
+        'xg_analysis': asdict(xg_report) if xg_report else {},
+        'player_valuations': {
+            pid: asdict(report) for pid, report in valuation_reports.items()
+        },
+        'injury_risk_team1': asdict(injury_report_team1) if injury_report_team1 else {},
+        'injury_risk_team2': asdict(injury_report_team2) if injury_report_team2 else {},
+        'opposition_scouting': asdict(opposition_report) if opposition_report else {}
+    }
+
     json_safe_level3 = exporter._to_jsonable(level3_analytics)
+    json_safe_level4 = exporter._to_jsonable(level4_analytics)
 
     # Save Level 3 analytics to JSON
     os.makedirs('outputs/level3_reports', exist_ok=True)
@@ -287,18 +401,32 @@ def main():
     pdf_paths = pdf_exporter.export_report_dicts(json_safe_level3, 'outputs/level3_reports')
     print(f"   ✅ Level 3 analytics saved ({len(pdf_paths)} PDFs)")
 
+    # Save Level 4 analytics to JSON
+    os.makedirs('outputs/level4_reports', exist_ok=True)
+    with open('outputs/level4_reports/xg_analysis.json', 'w') as f:
+        json.dump(json_safe_level4['xg_analysis'], f, indent=2)
+    with open('outputs/level4_reports/player_valuations.json', 'w') as f:
+        json.dump(json_safe_level4['player_valuations'], f, indent=2)
+    with open('outputs/level4_reports/injury_risk_team1.json', 'w') as f:
+        json.dump(json_safe_level4['injury_risk_team1'], f, indent=2)
+    with open('outputs/level4_reports/injury_risk_team2.json', 'w') as f:
+        json.dump(json_safe_level4['injury_risk_team2'], f, indent=2)
+    with open('outputs/level4_reports/opposition_scouting.json', 'w') as f:
+        json.dump(json_safe_level4['opposition_scouting'], f, indent=2)
+    print(f"   ✅ Level 4 analytics saved (5 JSON files)")
+
     # Draw annotations
-    print("\n🎨 Step 21: Rendering output video...")
+    print("\n🎨 Step 25: Rendering output video...")
     output_video_frames = tracker.draw_annotations(video_frames, tracks, team_ball_control)
 
     # Save output
-    output_path = 'output_videos/complete_analysis_level3.avi'
+    output_path = 'output_videos/complete_analysis_level4.avi'
     save_video(output_video_frames, output_path)
     print(f"   ✅ Saved to: {output_path}")
 
     # Print summary
     print("\n" + "=" * 80)
-    print("📈 LEVEL 3 ANALYSIS SUMMARY")
+    print("📈 LEVEL 4 ELITE ANALYSIS SUMMARY")
     print("=" * 80)
 
     print("\n🏆 Team Statistics:")
@@ -357,9 +485,15 @@ def main():
     print(f"      🔗 Pass Networks: outputs/level3_reports/pass_networks.json")
     print(f"      🚨 Alerts: outputs/level3_reports/alerts.json")
     print(f"      📊 Confidence: outputs/level3_reports/confidence.json")
+    print(f"\n   Level 4 Advanced Analytics:")
+    print(f"      ⚽ xG Analysis: outputs/level4_reports/xg_analysis.json")
+    print(f"      💰 Player Valuations: outputs/level4_reports/player_valuations.json")
+    print(f"      🏥 Injury Risk Team 1: outputs/level4_reports/injury_risk_team1.json")
+    print(f"      🏥 Injury Risk Team 2: outputs/level4_reports/injury_risk_team2.json")
+    print(f"      🔍 Opposition Scouting: outputs/level4_reports/opposition_scouting.json")
 
     print("\n" + "=" * 80)
-    print("✅ LEVEL 3 PROFESSIONAL SAAS PIPELINE COMPLETE!")
+    print("✅ LEVEL 4 ELITE SAAS PIPELINE COMPLETE!")
     print("=" * 80)
 
 if __name__ == '__main__':
